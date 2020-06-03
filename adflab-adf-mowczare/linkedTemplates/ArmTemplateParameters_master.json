@@ -35,6 +35,9 @@
 		"ADFlab-SSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
 		},
+		"Daily - DW Load Trigger_properties_Master - Begin DW Load_parameters_recipient": {
+			"value": "mateusz.owczarek@pentacomp.pl"
+		},
 		"containerUri": {
 			"value": ""
 		},
