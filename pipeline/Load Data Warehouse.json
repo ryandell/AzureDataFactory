@@ -101,6 +101,502 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "ODS Airport to DW",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "DW Truncate Staging",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"allowPolyBase": true,
+						"polyBaseSettings": {
+							"rejectValue": 0,
+							"rejectType": "value",
+							"useTypeDefault": true
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Code",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Code",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "City_Airport",
+									"type": "String"
+								},
+								"sink": {
+									"name": "City_Airport",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ODS_Airport",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DW_Staging_Airport",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "ODS Flights to DW",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "DW Truncate Staging",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"allowPolyBase": true,
+						"polyBaseSettings": {
+							"rejectValue": 0,
+							"rejectType": "value",
+							"useTypeDefault": true
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "YEAR",
+									"type": "Int16"
+								},
+								"sink": {
+									"name": "YEAR",
+									"type": "Int16"
+								}
+							},
+							{
+								"source": {
+									"name": "MONTH",
+									"type": "Int16"
+								},
+								"sink": {
+									"name": "MONTH",
+									"type": "Int16"
+								}
+							},
+							{
+								"source": {
+									"name": "FL_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "FL_DATE",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "UNIQUE_CARRIER",
+									"type": "String"
+								},
+								"sink": {
+									"name": "UNIQUE_CARRIER",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AIRLINE_ID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "AIRLINE_ID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "CARRIER",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CARRIER",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TAIL_NUM",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TAIL_NUM",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FL_NUM",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "FL_NUM",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "ORIGIN_AIRPORT_ID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "ORIGIN_AIRPORT_ID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "ORIGIN_AIRPORT_SEQ_ID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "ORIGIN_AIRPORT_SEQ_ID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "ORIGIN_CITY_MARKET_ID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "ORIGIN_CITY_MARKET_ID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "DEST_AIRPORT_ID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "DEST_AIRPORT_ID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "DEST_AIRPORT_SEQ_ID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "DEST_AIRPORT_SEQ_ID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "DEST_CITY_MARKET_ID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "DEST_CITY_MARKET_ID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "DEP_TIME",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DEP_TIME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DEP_DELAY",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "DEP_DELAY",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"name": "DEP_DELAY_NEW",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "DEP_DELAY_NEW",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"name": "TAXI_OUT",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "TAXI_OUT",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"name": "WHEELS_OFF",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WHEELS_OFF",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "WHEELS_ON",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WHEELS_ON",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TAXI_IN",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "TAXI_IN",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"name": "ARR_TIME",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ARR_TIME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ARR_DELAY",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "ARR_DELAY",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"name": "ARR_DELAY_NEW",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "ARR_DELAY_NEW",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"name": "CANCELLED",
+									"type": "Boolean"
+								},
+								"sink": {
+									"name": "CANCELLED",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "CANCELLATION_CODE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CANCELLATION_CODE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ACTUAL_ELAPSED_TIME",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "ACTUAL_ELAPSED_TIME",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"name": "AIR_TIME",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "AIR_TIME",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"name": "FLIGHTS",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "FLIGHTS",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "DISTANCE",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "DISTANCE",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "CARRIER_DELAY",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "CARRIER_DELAY",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"name": "WEATHER_DELAY",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "WEATHER_DELAY",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"name": "NAS_DELAY",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "NAS_DELAY",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"name": "SECURITY_DELAY",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "SECURITY_DELAY",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"name": "LATE_AIRCRAFT_DELAY",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "LATE_AIRCRAFT_DELAY",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"name": "DEST_CODE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DEST_CODE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ORIGIN_CODE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ORIGIN_CODE",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ODS_Flight",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DW_Staging_Flights",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []
