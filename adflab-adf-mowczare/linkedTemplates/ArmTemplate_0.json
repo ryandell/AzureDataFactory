@@ -475,7 +475,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/S3 to Blob Copy')]",
+			"name": "[concat(parameters('factoryName'), '/Lab3 Blob to Blob Copy')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
