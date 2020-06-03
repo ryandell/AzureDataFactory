@@ -395,8 +395,82 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Send Success Email",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "S3 to Azure Blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-33.eastus2.logic.azure.com:443/workflows/9cf172e46c744304bcbb0c4b598d18c0",
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"body": {
+						"adflab-adf-mowczare": "@{pipeline().DataFactory}",
+						"successtype": "Succeeded",
+						"message": "@{activity('Lab3 Blob to Blob Copy').output.dataWritten}",
+						"pipelineName": "@{pipeline().Pipeline}",
+						"recipient": "@{pipeline().parameters.recipient}"
+					}
+				}
+			},
+			{
+				"name": "Send Failure Email",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "S3 to Azure Blob",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-33.eastus2.logic.azure.com:443/workflows/9cf172e46c744304bcbb0c4b598d18c0",
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"body": {
+						"adflab-adf-mowczare": "@{pipeline().DataFactory}",
+						"successtype": "Failed",
+						"message": "@{activity('Lab3 Blob to Blob Copy').output.dataWritten}",
+						"pipelineName": "@{pipeline().Pipeline}",
+						"recipient": "@{pipeline().parameters.recipient}"
+					}
+				}
 			}
 		],
+		"parameters": {
+			"recipient": {
+				"type": "string",
+				"defaultValue": "mateusz.owczarek@pentacomp.pl"
+			}
+		},
 		"annotations": []
 	}
 }
