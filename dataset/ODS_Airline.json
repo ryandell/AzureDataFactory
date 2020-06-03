@@ -7,7 +7,17 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": [],
+		"schema": [
+			{
+				"name": "Code",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Airline_Code",
+				"type": "varchar"
+			}
+		],
 		"typeProperties": {
 			"schema": "dbo",
 			"table": "Airline"
