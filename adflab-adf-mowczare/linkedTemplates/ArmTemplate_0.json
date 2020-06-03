@@ -2165,6 +2165,72 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "DW Load Dimensions",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ODS Airline to DW",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ODS Airport to DW",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ODS Flights to DW",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_LoadDimensions]"
+						},
+						"linkedServiceName": {
+							"referenceName": "Azure DW DB",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "DW Load Fact",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "DW Load Dimensions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_LoadFact]"
+						},
+						"linkedServiceName": {
+							"referenceName": "Azure DW DB",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"annotations": []
