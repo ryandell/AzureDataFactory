@@ -1,0 +1,411 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adflab-adf-mowczare"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Load Data Warehouse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DW Truncate Staging",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_TruncateStaging]"
+						},
+						"linkedServiceName": {
+							"referenceName": "Azure DW DB",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ODS Airline to DW",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "DW Truncate Staging",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"allowPolyBase": true,
+								"polyBaseSettings": {
+									"rejectValue": 0,
+									"rejectType": "value",
+									"useTypeDefault": true
+								}
+							},
+							"enableStaging": true,
+							"stagingSettings": {
+								"linkedServiceName": {
+									"referenceName": "AzStorage_Staging",
+									"type": "LinkedServiceReference"
+								},
+								"path": "output"
+							},
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Code",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Code",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Airline_Code",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Airline_Code",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ODS_Airline",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DW_Staging_Airlane",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ODS_Airline')]",
+				"[concat(variables('factoryId'), '/datasets/DW_Staging_Airlane')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DW_Staging_Airlane')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Azure DW DB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "Code",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Airline_Code",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "DimAirline"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ODS_Airline')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LinkedServer AirlineODS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Code",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Airline_Code",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Airline"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ODS_Airport')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LinkedServer AirlineODS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Code",
+						"type": "varchar"
+					},
+					{
+						"name": "City_Airport",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Airport"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ODS_Flight')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LinkedServer AirlineODS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "YEAR",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "MONTH",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "FL_DATE",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "UNIQUE_CARRIER",
+						"type": "varchar"
+					},
+					{
+						"name": "AIRLINE_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CARRIER",
+						"type": "varchar"
+					},
+					{
+						"name": "TAIL_NUM",
+						"type": "varchar"
+					},
+					{
+						"name": "FL_NUM",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ORIGIN_AIRPORT_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ORIGIN_AIRPORT_SEQ_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ORIGIN_CITY_MARKET_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DEST_AIRPORT_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DEST_AIRPORT_SEQ_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DEST_CITY_MARKET_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DEP_TIME",
+						"type": "varchar"
+					},
+					{
+						"name": "DEP_DELAY",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "DEP_DELAY_NEW",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "TAXI_OUT",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "WHEELS_OFF",
+						"type": "varchar"
+					},
+					{
+						"name": "WHEELS_ON",
+						"type": "varchar"
+					},
+					{
+						"name": "TAXI_IN",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "ARR_TIME",
+						"type": "varchar"
+					},
+					{
+						"name": "ARR_DELAY",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "ARR_DELAY_NEW",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "CANCELLED",
+						"type": "bit"
+					},
+					{
+						"name": "CANCELLATION_CODE",
+						"type": "varchar"
+					},
+					{
+						"name": "ACTUAL_ELAPSED_TIME",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "AIR_TIME",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "FLIGHTS",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DISTANCE",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CARRIER_DELAY",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "WEATHER_DELAY",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "NAS_DELAY",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "SECURITY_DELAY",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "LATE_AIRCRAFT_DELAY",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "DEST_CODE",
+						"type": "varchar"
+					},
+					{
+						"name": "ORIGIN_CODE",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Flight"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
