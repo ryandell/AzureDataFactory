@@ -1,0 +1,32 @@
+{
+	"name": "Daily - DW Load Trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Master - Begin DW Load",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"recipient": "mateusz.owczarek@pentacomp.pl"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2020-06-03T09:26:00.000Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"hours": [
+						10
+					]
+				}
+			}
+		}
+	}
+}
