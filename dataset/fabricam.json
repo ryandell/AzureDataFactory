@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText1",
+	"name": "fabricam",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage_CSV",
