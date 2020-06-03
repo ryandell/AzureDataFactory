@@ -1,5 +1,5 @@
 {
-	"name": "S3 to Blob Copy",
+	"name": "Lab3 Blob to Blob Copy",
 	"properties": {
 		"activities": [
 			{
