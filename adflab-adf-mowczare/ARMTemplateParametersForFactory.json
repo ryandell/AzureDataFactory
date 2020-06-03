@@ -8,11 +8,20 @@
 		"AzStorage_Staging_connectionString": {
 			"value": ""
 		},
+		"Azure DW DB_connectionString": {
+			"value": ""
+		},
 		"AzureBlobStorage_CSV_connectionString": {
 			"value": ""
 		},
 		"SSISDB Azure Endpoint_connectionString": {
 			"value": ""
+		},
+		"Weather_Blob_connectionString": {
+			"value": ""
+		},
+		"HTTP_Weather_properties_typeProperties_url": {
+			"value": "https://weather-b362.restdb.io/rest/random-weather-dec-2016"
 		},
 		"ADFlab-SSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "adflabsqlmg3v5.database.windows.net"

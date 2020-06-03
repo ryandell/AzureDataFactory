@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzStorage_Staging'"
 		},
+		"Azure DW DB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Azure DW DB'"
+		},
 		"AzureBlobStorage_CSV_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage_CSV'"
@@ -18,6 +22,14 @@
 		"SSISDB Azure Endpoint_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SSISDB Azure Endpoint'"
+		},
+		"Weather_Blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Weather_Blob'"
+		},
+		"HTTP_Weather_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://weather-b362.restdb.io/rest/random-weather-dec-2016"
 		},
 		"ADFlab-SSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
@@ -60,11 +72,20 @@
 					"AzStorage_Staging_connectionString": {
 						"value": "[parameters('AzStorage_Staging_connectionString')]"
 					},
+					"Azure DW DB_connectionString": {
+						"value": "[parameters('Azure DW DB_connectionString')]"
+					},
 					"AzureBlobStorage_CSV_connectionString": {
 						"value": "[parameters('AzureBlobStorage_CSV_connectionString')]"
 					},
 					"SSISDB Azure Endpoint_connectionString": {
 						"value": "[parameters('SSISDB Azure Endpoint_connectionString')]"
+					},
+					"Weather_Blob_connectionString": {
+						"value": "[parameters('Weather_Blob_connectionString')]"
+					},
+					"HTTP_Weather_properties_typeProperties_url": {
+						"value": "[parameters('HTTP_Weather_properties_typeProperties_url')]"
 					},
 					"ADFlab-SSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 						"value": "[parameters('ADFlab-SSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
